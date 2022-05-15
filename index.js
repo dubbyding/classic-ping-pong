@@ -2,6 +2,7 @@ let userScore = 0;
 let AIScore = 0;
 
 function startGame() {
+	/* Creating a new component. */
 	myGamePieceUser = new component(
 		10,
 		gameElement.canvas.height / 2 + 40,
@@ -44,6 +45,7 @@ let gameElement = {
 		this.interval = setInterval(updateGameArea, 20);
 		this.keyCheck = setInterval(playerMovement, 20);
 		this.aiCheck = setInterval(AIMovement, 20);
+		this.text = setInterval(textdisplay, 20);
 	},
 	clear: function () {
 		/* Clearing the canvas. */
@@ -139,7 +141,14 @@ function borderSet(width, height, color) {
 		gameElement.canvas.height
 	);
 }
-
+function textdisplay() {
+	let ctx = gameElement.context;
+	ctx.font = '10px Comic Sans MS';
+	ctx.fillStyle = 'red';
+	ctx.textAlign = 'center';
+	ctx.fillText('Score Player = ' + String(userScore), 50, 20);
+	ctx.fillText('Score AI = ' + String(AIScore), 500, 20);
+}
 function playerMovement() {
 	/* A function that is called every 20ms. It checks if the key is w or s and changes the speed of the
 	player accordingly. */
@@ -148,18 +157,14 @@ function playerMovement() {
 			speedY = -4;
 		} else if (key == 's') {
 			speedY = 4;
+		} else {
+			return;
 		}
 		myGamePieceUser.y += speedY;
-
-		let ctx = gameElement.context;
-		ctx.font = '10px Comic Sans MS';
-		ctx.fillStyle = 'red';
-		ctx.textAlign = 'center';
 	};
 	if (ball.x - 10 < 0) {
 		AIScore += 1;
 	}
-	ctx.fillText('Score AI = ' + String(AIScore), 500, 20);
 }
 
 function AIMovement() {
@@ -173,7 +178,7 @@ function AIMovement() {
 		pos *= -1;
 	}
 	if (pos > 350) {
-		pos = pos - 350;
+		pos = 350 - (pos - 350);
 	}
 	if (myGamePieceAI.y + 40 < pos) {
 		speedY = 4;
@@ -185,11 +190,6 @@ function AIMovement() {
 	} else {
 		userScore += 1;
 	}
-	let ctx = gameElement.context;
-	ctx.font = '10px Comic Sans MS';
-	ctx.fillStyle = 'red';
-	ctx.textAlign = 'center';
-	ctx.fillText('Score Player = ' + String(userScore), 50, 20);
 }
 
 function updateGameArea() {
